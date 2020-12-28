@@ -1,0 +1,2 @@
+# testexceptioncutoff
+Test Heroku LogDna
