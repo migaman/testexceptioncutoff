@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	
+	
+   <!-- Take both of these LOGDNA appenders -->
+   <!-- this one is a plain old HTTP transport -->
+   <appender name="LOGDNA-HTTP"
+      class="net._95point2.utils.LogDNAAppender">
+      <appName>testexceptioncutoff</appName>
+      <ingestKey>INGEST_KEY</ingestKey>
+      <includeStacktrace>true</includeStacktrace>
+      <sendMDC>true</sendMDC>
+   </appender>
+   
+   
+   
+   
+   <appender name="LOGDNA"
+      class="ch.qos.logback.classic.AsyncAppender">
+      <appender-ref ref="LOGDNA-HTTP" />
+   </appender>
+   
+   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>C:\ProgramData\logs\hans.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>C:\ProgramData\logdna.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+      		<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap>
+
+    	</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%date | %level | [%thread] | %logger{36} | [%file:%line] | %msg | %n%ex</pattern>			
+		</encoder>
+	</appender>
+   
+
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="LOGDNA-HTTP" />
+		<appender-ref ref="FILE" />
+		
+	</root>
+
+</configuration>
